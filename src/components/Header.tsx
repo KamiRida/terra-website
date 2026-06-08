@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { TerraMark } from "./TerraMark";
-import { GlassButton } from "./ui/GlassButton";
 import { nav } from "@/lib/site";
 
 export function Header() {
@@ -16,7 +15,7 @@ export function Header() {
   useEffect(() => {
     const onScroll = () => {
       let dark = false;
-      for (const id of ["camera"]) {
+      for (const id of ["hero-sky", "eyes-dark", "camera"]) {
         const el = document.getElementById(id);
         if (!el) continue;
         const r = el.getBoundingClientRect();
@@ -64,13 +63,6 @@ export function Header() {
             </div>
           </div>
 
-          <div className="hidden md:block">
-            <GlassButton href="#inquire" tone={onLight ? "brand" : "light"} className="px-5 py-2.5">
-              Inquire
-              <ArrowRight size={15} />
-            </GlassButton>
-          </div>
-
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -93,7 +85,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="glass mx-4 mt-1 rounded-2xl p-2 md:hidden"
+            className="glass-rim mx-4 mt-1 rounded-2xl border border-white/55 bg-white/65 p-2 shadow-[0_24px_55px_-18px_rgba(9,40,60,0.45)] backdrop-blur-2xl backdrop-saturate-150 md:hidden"
           >
             <div className="flex flex-col gap-1">
               {nav.map((item) => (
@@ -106,15 +98,14 @@ export function Header() {
                   {item.label}
                 </a>
               ))}
-              <GlassButton
+              <a
                 href="#inquire"
                 onClick={() => setOpen(false)}
-                tone="brand"
-                className="mt-1 w-full !rounded-xl"
+                className="press mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-medium text-ink shadow-[0_8px_20px_-8px_rgba(9,40,60,0.35)] ring-1 ring-black/10"
               >
                 Inquire
                 <ArrowRight size={15} />
-              </GlassButton>
+              </a>
             </div>
           </motion.div>
         )}

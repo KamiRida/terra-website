@@ -34,6 +34,25 @@ export function Backdrop() {
             yChannelSelector="G"
           />
         </filter>
+
+        {/* gentler lens for Liquid Glass buttons — subtle refraction of the backdrop */}
+        <filter id="liquid-lens" x="-25%" y="-25%" width="150%" height="150%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.013 0.016"
+            numOctaves="2"
+            seed="4"
+            result="n"
+          />
+          <feGaussianBlur in="n" stdDeviation="1.6" result="nb" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="nb"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
       </svg>
     </>
   );

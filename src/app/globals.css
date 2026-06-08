@@ -114,28 +114,37 @@
       0 26px 50px -30px rgba(9, 9, 11, 0.28);
   }
 
-  /* Liquid glass, adds a real SVG refraction of the backdrop (Chromium);
-     elsewhere it gracefully falls back to the frosted blur above. */
+  /* Liquid Glass — a translucent material that refracts the content behind it
+     (real SVG lensing on Chromium; frosted-blur fallback elsewhere), with a
+     bright specular rim, glass-thickness highlights, and a soft cast shadow. */
   .glass-liquid {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-    backdrop-filter: blur(8px) saturate(1.5) url(#terra-glass);
-    -webkit-backdrop-filter: blur(10px) saturate(1.5);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+    backdrop-filter: blur(5px) saturate(1.8) brightness(1.06) url(#liquid-lens);
+    -webkit-backdrop-filter: blur(9px) saturate(1.8) brightness(1.05);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.9),
-      inset 0 -10px 24px -16px rgba(9, 9, 11, 0.18),
-      0 1px 2px rgba(9, 9, 11, 0.05),
-      0 30px 60px -34px rgba(9, 9, 11, 0.32);
+      inset 0 1px 1px rgba(255, 255, 255, 0.95),
+      inset 0 -10px 22px -12px rgba(255, 255, 255, 0.55),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 2px 6px rgba(9, 9, 11, 0.14),
+      0 22px 48px -20px rgba(9, 9, 11, 0.42);
   }
 
-  /* Specular sweep along the top rim of a glass surface */
+  /* Specular rim — light catches the glass edge, brightest top-left */
   .glass-rim::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 40%);
+    padding: 1.2px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.35) 28%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0.12) 72%,
+      rgba(255, 255, 255, 0.7) 100%
+    );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -217,6 +226,25 @@
 @keyframes fade-rise {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* marquee banner (e.g. the "Including" farms strip on mobile) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 16s linear infinite; }
+
+/* Magic UI aurora text */
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-aurora {
+  animation-name: aurora;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
 }
 @keyframes dash-flow {
   to { stroke-dashoffset: -20; }

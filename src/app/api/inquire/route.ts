@@ -54,7 +54,9 @@ export async function POST(req: Request) {
   };
 
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.INQUIRY_TO_EMAIL;
+  const to =
+    process.env.INQUIRY_TO_EMAIL ||
+    "kamisalahuddin@gmail.com, jaiyen_shetty@berkeley.edu";
   const from = process.env.INQUIRY_FROM_EMAIL || "Terra <onboarding@resend.dev>";
 
   // No key configured yet → accept gracefully so the UI works in dev / before setup.

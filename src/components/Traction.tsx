@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { TiltGlass } from "./ui/TiltGlass";
+import { AuroraText, TERRA_AURORA } from "./ui/aurora-text";
 import { tractionStats, signedFarms } from "@/lib/site";
 
 export function Traction() {
@@ -16,26 +17,28 @@ export function Traction() {
   const inView = useInView(gridRef, { once: true, margin: "-15% 0px" });
 
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32">
+    <section className="relative overflow-hidden pt-12 pb-24 sm:pt-16 sm:pb-32">
       <div className="container-x">
-        <p className="eyebrow">Traction</p>
-        <h2 className="mt-5 max-w-3xl text-balance text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
+        <h2 className="max-w-3xl text-balance text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
           <span className="text-ink">Trusted by </span>
-          <span className="text-accent">185,000 acres.</span>
+          <AuroraText colors={TERRA_AURORA}>185,000 acres.</AuroraText>
         </h2>
 
-        <div ref={gridRef} className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div ref={gridRef} className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
           {tractionStats.map((s, i) => (
-            <TiltGlass key={s.label} className="flex h-full flex-col gap-1 p-6" max={5}>
-              <span className="text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-                <CountUp value={s.value} play={inView} delay={i * 0.06} />
-              </span>
-              <span className="text-sm leading-snug text-ink-mute">{s.label}</span>
+            <TiltGlass key={s.label} className="h-full p-5 sm:p-6" max={5}>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-2xl font-semibold tracking-tight text-ink sm:text-4xl md:text-5xl">
+                  <CountUp value={s.value} play={inView} delay={i * 0.06} />
+                </span>
+                <span className="text-xs leading-snug text-ink-mute sm:text-sm">{s.label}</span>
+              </div>
             </TiltGlass>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-mute">
+        {/* desktop: static row */}
+        <div className="mt-10 hidden flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-mute sm:flex">
           <span className="eyebrow">Including</span>
           {signedFarms.map((f) => (
             <span
@@ -45,6 +48,23 @@ export function Traction() {
               {f}
             </span>
           ))}
+        </div>
+
+        {/* phone: moving banner so they all fit */}
+        <div className="mt-8 sm:hidden">
+          <span className="eyebrow">Including</span>
+          <div className="mt-2 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+            <div className="flex w-max animate-marquee items-center gap-2">
+              {[...signedFarms, ...signedFarms].map((f, i) => (
+                <span
+                  key={i}
+                  className="shrink-0 rounded-full border border-line bg-white px-3 py-1 text-xs font-medium text-ink"
+                >
+                  {f}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

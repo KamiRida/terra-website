@@ -12,9 +12,11 @@ import type { ReactNode } from "react";
 type Tone = "brand" | "light" | "dark";
 
 /**
- * GlassButton, a liquid-glass button that responds to the cursor with a
- * moving specular highlight and a subtle tilt. Renders an <a> when `href`
- * is set, otherwise a <button>.
+ * GlassButton — Apple-style Liquid Glass. A translucent capsule that refracts
+ * the content behind it, with a bright specular rim, a top highlight, a
+ * cursor-tracked specular sweep, a subtle tilt, and a fluid press. Brand color
+ * infuses the glass so the label stays legible. Renders an <a> when `href` is
+ * set, otherwise a <button>.
  */
 export function GlassButton({
   children,
@@ -24,6 +26,8 @@ export function GlassButton({
   disabled,
   tone = "brand",
   className = "",
+  textClass,
+  scrim = false,
 }: {
   children: ReactNode;
   href?: string;
@@ -32,6 +36,8 @@ export function GlassButton({
   disabled?: boolean;
   tone?: Tone;
   className?: string;
+  textClass?: string;
+  scrim?: boolean;
 }) {
   const reduce = useReducedMotion();
   const px = useMotionValue(50);
@@ -39,7 +45,7 @@ export function GlassButton({
   const rx = useSpring(0, { stiffness: 240, damping: 16 });
   const ry = useSpring(0, { stiffness: 240, damping: 16 });
 
-  const sheen = useMotionTemplate`radial-gradient(120px circle at ${px}% ${py}%, rgba(255,255,255,0.7), transparent 60%)`;
+  const sheen = useMotionTemplate`radial-gradient(140px circle at ${px}% ${py}%, rgba(255,255,255,0.85), transparent 60%)`;
   const transform = useMotionTemplate`perspective(560px) rotateX(${rx}deg) rotateY(${ry}deg)`;
 
   function onMove(e: React.PointerEvent) {
@@ -49,8 +55,8 @@ export function GlassButton({
     const y = (e.clientY - r.top) / r.height;
     px.set(x * 100);
     py.set(y * 100);
-    ry.set((x - 0.5) * 12);
-    rx.set((0.5 - y) * 12);
+    ry.set((x - 0.5) * 14);
+    rx.set((0.5 - y) * 14);
   }
   function onLeave() {
     px.set(50);
@@ -59,30 +65,46 @@ export function GlassButton({
     ry.set(0);
   }
 
-  const text = tone === "light" ? "text-white" : "text-ink";
+  const text = textClass ?? (tone === "light" ? "text-white" : "text-ink");
   const tint =
     tone === "dark"
       ? "from-ink/85 to-ink/70"
       : tone === "light"
         ? "from-white/15 to-white/5"
-        : "from-accent-400/35 to-accent-600/30";
+        : "from-accent-400/45 to-accent-700/35";
 
-  const cls = `glass-liquid glass-rim press group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold ${text} disabled:opacity-60 ${className}`;
+  const cls = `glass-liquid glass-rim press group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-medium ${text} disabled:opacity-60 ${className}`;
 
   const inner = (
     <>
+      {/* brand color infusing the glass */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute inset-0 -z-0 bg-gradient-to-b ${tint}`}
+        className={`pointer-events-none absolute inset-0 -z-0 bg-gradient-to-br ${tint}`}
       />
+      {/* legibility scrim — dark backing so a light label reads over any background */}
+      {scrim && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_130%_at_50%_50%,rgba(0,0,0,0.5),rgba(0,0,0,0.16)_85%)]"
+        />
+      )}
+      {/* top specular highlight (glass thickness) */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/35 to-transparent"
+      />
+      {/* cursor-tracked specular sweep — only on hover, so it never washes out the label */}
       {!reduce && (
         <motion.span
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-200 group-hover:opacity-100"
           style={{ background: sheen }}
         />
       )}
-      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+      <span className="relative z-10 inline-flex items-center gap-2 sm:[text-shadow:0_1px_3px_rgba(9,9,11,0.45)]">
+        {children}
+      </span>
     </>
   );
 
@@ -90,7 +112,14 @@ export function GlassButton({
 
   if (href) {
     return (
-      <motion.a href={href} onClick={onClick} onPointerMove={onMove} onPointerLeave={onLeave} style={style} className={cls}>
+      <motion.a
+        href={href}
+        onClick={onClick}
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        style={style}
+        className={cls}
+      >
         {inner}
       </motion.a>
     );

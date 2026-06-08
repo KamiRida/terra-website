@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, useMotionTemplate, type MotionValue } from "motion/react";
+import { AuroraText, TERRA_AURORA, CASE_AURORA } from "./ui/aurora-text";
 import { caseStudy } from "@/lib/site";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -13,7 +14,7 @@ export function CaseStudy() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   return (
-    <section id="casestudy" ref={ref} className="relative scroll-mt-24" style={{ height: "200vh" }}>
+    <section id="casestudy" ref={ref} className="relative scroll-mt-24" style={{ height: "150vh" }}>
       <div className="sticky top-0 flex min-h-screen items-center">
         <div className="container-x w-full py-16">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -24,18 +25,20 @@ export function CaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10% 0px" }}
                 transition={{ duration: 0.6, ease: EASE }}
-                className="text-xl font-semibold tracking-tight text-accent sm:text-2xl"
+                className="text-2xl font-semibold tracking-tight sm:text-3xl"
               >
-                {caseStudy.kicker}
+                <AuroraText colors={CASE_AURORA}>{caseStudy.kicker}</AuroraText>
               </motion.p>
               <motion.h2
                 initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10% 0px" }}
                 transition={{ duration: 0.7, ease: EASE, delay: 0.05 }}
-                className="mt-4 max-w-xl text-balance text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl"
+                className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-ink sm:text-5xl"
               >
-                {caseStudy.title}
+                Farmers already have the data.
+                <span aria-hidden className="block h-4 sm:hidden" />
+                Terra turns it into decisions before they cost money.
               </motion.h2>
 
               <ol className="mt-8 space-y-5">
@@ -115,7 +118,15 @@ function Bar({
   axis: string;
   reduce: boolean;
 }) {
-  const bg = tone === "danger" ? "bg-ink" : "bg-accent-500";
+  const isAurora = tone === "grass";
+  const barClass = tone === "danger" ? "bg-ink" : "animate-aurora";
+  const auroraBg = isAurora
+    ? {
+        backgroundImage: `linear-gradient(135deg, ${TERRA_AURORA.join(", ")}, ${TERRA_AURORA[0]})`,
+        backgroundSize: "200% auto",
+        animationDuration: "10s",
+      }
+    : {};
   const start = 0.08 + index * 0.06;
   const pct = useTransform(progress, [start, start + 0.3], [0, heightPct]);
   const height = useMotionTemplate`${pct}%`;
@@ -126,8 +137,8 @@ function Bar({
         {caption}
       </span>
       <motion.div
-        className={`w-full max-w-[7rem] rounded-t-xl ${bg}`}
-        style={{ height: reduce ? `${heightPct}%` : height, minHeight: 8 }}
+        className={`w-full max-w-[7rem] rounded-t-xl ${barClass}`}
+        style={{ height: reduce ? `${heightPct}%` : height, minHeight: 8, ...auroraBg }}
       />
       <span className="mt-3 text-xs font-semibold uppercase tracking-wide text-ink-soft">
         {axis}

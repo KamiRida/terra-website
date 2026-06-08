@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { TerraMark } from "./TerraMark";
 import { GlassButton } from "./ui/GlassButton";
+import { AuroraText, TERRA_AURORA } from "./ui/aurora-text";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -22,7 +23,7 @@ export function FinalCTA() {
           >
             <h2 className="max-w-lg text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
               <span className="text-ink">Farm AI that helps in the field, </span>
-              <span className="text-accent">not after.</span>{" "}
+              <AuroraText colors={TERRA_AURORA}>not after.</AuroraText>{" "}
               <span className="text-ink-mute">Bring Terra to your next season.</span>
             </h2>
             <GlassButton href="#inquire" tone="brand" className="mt-8 px-6 py-3.5">

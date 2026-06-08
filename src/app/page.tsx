@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { DataConstellation } from "@/components/DataConstellation";
 import { Problem } from "@/components/Problem";
-import { Products } from "@/components/Products";
+import { EyesIntro } from "@/components/EyesIntro";
 import { ExplodedCamera } from "@/components/ExplodedCamera";
 import { CaseStudy } from "@/components/CaseStudy";
 import { Traction } from "@/components/Traction";
@@ -17,7 +17,7 @@ export default function Home() {
       <main className="flex-1">
         <DataConstellation />
         <Problem />
-        <Products />
+        <EyesIntro />
         <ExplodedCamera />
         <CaseStudy />
         <Traction />

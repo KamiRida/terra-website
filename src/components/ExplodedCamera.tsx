@@ -7,9 +7,11 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  useMotionTemplate,
   useMotionValueEvent,
   useReducedMotion,
 } from "motion/react";
+import { AuroraText, TERRA_GREEN } from "./ui/aurora-text";
 
 const FRAME_COUNT = 12;
 const frameSrc = (i: number) => `/cam/cam_${String(i + 1).padStart(4, "0")}.png`;
@@ -36,6 +38,13 @@ export function ExplodedCamera() {
     ease: cubicBezier(0.16, 1, 0.3, 1),
   });
   const ghostY = useSpring(ghostYRaw, { stiffness: 70, damping: 20, mass: 0.6 });
+  // "THE EYES" blur-fades in word by word as you enter the section (reverses on scroll back)
+  const theOpacity = useTransform(scrollYProgress, [0, 0.08], [0, 1]);
+  const theBlur = useTransform(scrollYProgress, [0, 0.08], [22, 0]);
+  const theFilter = useMotionTemplate`blur(${theBlur}px)`;
+  const eyesOpacity = useTransform(scrollYProgress, [0.05, 0.14], [0, 1]);
+  const eyesBlur = useTransform(scrollYProgress, [0.05, 0.14], [22, 0]);
+  const eyesFilter = useMotionTemplate`blur(${eyesBlur}px)`;
 
   function setupSize() {
     const canvas = canvasRef.current;
@@ -123,18 +132,28 @@ export function ExplodedCamera() {
           style={reduce ? undefined : { y: ghostY }}
           className="pointer-events-none absolute inset-0 z-0 flex select-none items-center justify-between px-[10vw]"
         >
-          <span
+          <motion.span
             className="font-bold uppercase leading-none"
-            style={{ fontSize: "clamp(56px, 15vw, 240px)", letterSpacing: "-0.03em", color: "rgba(255,255,255,0.18)" }}
+            style={{
+              fontSize: "clamp(56px, 15vw, 240px)",
+              letterSpacing: "-0.03em",
+              color: "rgba(255,255,255,0.18)",
+              ...(reduce ? {} : { opacity: theOpacity, filter: theFilter }),
+            }}
           >
             The
-          </span>
-          <span
+          </motion.span>
+          <motion.span
             className="font-bold uppercase leading-none"
-            style={{ fontSize: "clamp(56px, 15vw, 240px)", letterSpacing: "-0.03em", color: "rgba(255,255,255,0.18)" }}
+            style={{
+              fontSize: "clamp(56px, 15vw, 240px)",
+              letterSpacing: "-0.03em",
+              color: "rgba(255,255,255,0.18)",
+              ...(reduce ? {} : { opacity: eyesOpacity, filter: eyesFilter }),
+            }}
           >
             Eyes
-          </span>
+          </motion.span>
         </motion.div>
         {/* transparent PNG frames sit opaquely over the ghost (true occlusion) */}
         <canvas ref={canvasRef} className="absolute inset-0 z-[1] h-full w-full" />
@@ -142,7 +161,7 @@ export function ExplodedCamera() {
         {/* bottom-left content */}
         <motion.div
           style={reduce ? undefined : { y: headY }}
-          className="absolute bottom-16 left-6 z-10 max-w-sm sm:left-12 lg:left-20"
+          className="absolute bottom-12 left-6 right-6 z-10 max-w-sm sm:bottom-16 sm:left-12 sm:right-auto lg:left-20"
         >
           <a
             href="#inquire"
@@ -151,9 +170,10 @@ export function ExplodedCamera() {
             Engineered in the Central Valley
             <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
           </a>
-          <h2 className="mb-4 text-3xl font-semibold leading-[1.06] tracking-tight text-white sm:text-5xl">
+          <h2 className="mb-3 text-pretty text-2xl font-semibold leading-[1.15] tracking-tight text-white sm:mb-4 sm:text-5xl sm:leading-[1.06]">
             Engineered from the lens in.{" "}
-            <span className="text-white/55">Built to survive the field.</span>
+            <br className="sm:hidden" />
+            <AuroraText colors={TERRA_GREEN}>Built to survive the field.</AuroraText>
           </h2>
           <p className="text-sm text-white/60 sm:text-base">
             4K computer vision · all-weather · tractor-mounted.

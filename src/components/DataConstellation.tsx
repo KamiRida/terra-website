@@ -8,122 +8,78 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 const container = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
-  },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 };
-
 const item = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
 };
 
-const SIGNALS = [
-  "PG&E",
-  "Irrigation",
-  "Soil moisture",
-  "Telemetry",
-  "Labor",
-  "Weather",
-  "Crop health",
-];
-
 export function DataConstellation() {
   return (
-    <section
-      id="top"
-      className="relative flex min-h-screen items-center overflow-hidden bg-white"
-    >
-      {/* ambient field — soft green light, slow drift */}
+    <section id="top" className="relative overflow-hidden">
+      {/* sentinel: header runs white while it overlaps the blue sky */}
+      <div id="hero-sky" className="pointer-events-none absolute inset-x-0 top-0 h-[68vh]" />
+
+      {/* full-bleed landscape background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_-10%,#f3faf4_0%,#ffffff_55%)]" />
-        <div className="animate-blob absolute -top-32 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full bg-accent-300/25 blur-[120px]" />
-        <div className="animate-blob absolute -bottom-40 -right-24 h-[34rem] w-[34rem] rounded-full bg-accent-200/30 blur-[130px] [animation-delay:-8s]" />
-        <div className="animate-blob absolute -bottom-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-accent-100/40 blur-[120px] [animation-delay:-14s]" />
-        {/* hairline grid, barely-there */}
-        <div className="field-lines absolute inset-0 opacity-[0.5] [mask-image:radial-gradient(60%_55%_at_50%_45%,#000_0%,transparent_75%)]" />
+        <div
+          className="absolute inset-0 bg-top bg-cover bg-no-repeat max-sm:bg-[length:auto_155%]"
+          style={{ backgroundImage: "url(/hero-landscape.png)" }}
+        />
+        {/* fade the lower portion to white so it blends into the page + frames the OS */}
+        <div className="absolute inset-x-0 bottom-0 h-[72%] bg-gradient-to-b from-transparent via-white/80 to-white" />
+        {/* solid white floor guarantees a seamless hand-off into the next section */}
+        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-white" />
       </div>
 
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="container-x flex flex-col items-center py-32 text-center"
+        className="container-x flex flex-col items-center px-6 pb-0 pt-36 text-center sm:pt-44"
       >
-        <motion.div variants={item}>
-          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white/70 px-3.5 py-1.5 backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
-            <span className="eyebrow !text-ink-soft">Terra OS · The Brain</span>
-          </span>
-        </motion.div>
-
         <motion.h1
           variants={item}
-          className="mt-8 max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.03em] text-ink sm:text-7xl lg:text-[5.5rem]"
+          className="max-w-4xl text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-white [text-shadow:0_2px_24px_rgba(20,60,90,0.35)] sm:text-6xl lg:text-7xl"
         >
-          Every signal on your farm.
-          <br />
-          <span className="bg-gradient-to-br from-accent-500 to-accent-700 bg-clip-text text-transparent">
-            One intelligent system.
-          </span>
+          The Operating System for the Farm
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mt-7 max-w-2xl text-pretty text-lg leading-relaxed text-ink-mute sm:text-xl"
+          className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-white/90 [text-shadow:0_1px_14px_rgba(20,60,90,0.35)] sm:text-lg"
         >
-          Terra connects the data you already produce — power, water, irrigation,
-          labor, weather, crop health — into a single operating layer you can act
-          on in real time.
+          Terra connects the data from power, water, irrigation, labor, weather,
+          crop health into a single operating system you can act on in real time.
         </motion.p>
 
-        <motion.div
-          variants={item}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
-        >
-          <GlassButton href="#inquire" tone="brand" className="px-7 py-3.5 text-base">
+        <motion.div variants={item} className="mt-10">
+          <GlassButton href="#inquire" tone="light" scrim className="px-9 py-4 text-base">
             Inquire
-            <ArrowRight size={16} />
+            <ArrowRight size={17} />
           </GlassButton>
-          <a
-            href="#products"
-            className="press group inline-flex items-center gap-1.5 px-2 py-2 text-base font-medium text-ink-soft transition-colors hover:text-accent-600"
-          >
-            See the platform
-            <ArrowRight
-              size={16}
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
-            />
-          </a>
         </motion.div>
 
-        {/* signal row — what gets unified, stated quietly */}
+        {/* Terra OS dashboard, floating up from the bottom like a real app window */}
         <motion.div
-          variants={item}
-          className="mt-16 flex max-w-3xl flex-wrap items-center justify-center gap-x-3 gap-y-2"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.4 }}
+          className="relative z-20 mt-12 w-full max-w-6xl sm:mt-16"
         >
-          {SIGNALS.map((s, i) => (
-            <span key={s} className="flex items-center gap-3">
-              {i > 0 && <span className="h-1 w-1 rounded-full bg-grass-300" />}
-              <span className="font-mono text-xs uppercase tracking-[0.12em] text-ink-mute">
-                {s}
-              </span>
-            </span>
-          ))}
+          <div className="relative overflow-hidden rounded-t-2xl bg-white shadow-[0_40px_120px_-30px_rgba(15,40,60,0.45)] sm:border sm:border-black/10 sm:ring-1 sm:ring-black/5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/terra-os.png"
+              alt="The Terra OS dashboard, showing fields, vegetation health, a farm map, alerts, weather, and live camera feeds"
+              className="block h-auto w-full"
+              draggable={false}
+            />
+            {/* phone: dissolve the bottom into the page so there's no hard cut */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent sm:hidden" />
+          </div>
         </motion.div>
-      </motion.div>
-
-      {/* scroll cue */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: 0.8 }}
-        className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-      >
-        <span className="eyebrow !text-[0.62rem] !text-grass-400">Scroll</span>
-        <span className="relative h-9 w-px overflow-hidden bg-line">
-          <span className="absolute inset-x-0 top-0 h-3 w-px animate-[scanline_2.4s_ease-in-out_infinite] bg-accent-500" />
-        </span>
       </motion.div>
     </section>
   );

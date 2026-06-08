@@ -1,16 +1,25 @@
 import { Reveal, Stagger, RevealItem } from "./ui/Reveal";
 import { TiltGlass } from "./ui/TiltGlass";
+import { AuroraText, TERRA_AURORA_DEEP } from "./ui/aurora-text";
+import { TextReveal } from "./ui/text-reveal";
 import { problems, stakes } from "@/lib/site";
 
 export function Problem() {
   return (
     <section className="relative py-24 sm:py-32">
-      <div className="container-x">
+      {/* soft white gradient bridges the seam from the hero, no hard cut */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-36 bg-gradient-to-b from-white to-white/0"
+      />
+
+      <div className="container-x relative z-10">
         <Reveal>
-          <p className="eyebrow">The problem</p>
-          <h2 className="mt-5 max-w-3xl text-balance text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            <span className="text-ink">Farming hasn&apos;t changed in twenty years.</span>{" "}
-            <span className="text-accent">The stakes have.</span>
+          <p className="text-5xl font-semibold tracking-tight sm:text-7xl">
+            <AuroraText colors={TERRA_AURORA_DEEP}>The problem</AuroraText>
+          </p>
+          <h2 className="mt-6 max-w-3xl text-3xl font-semibold leading-[1.12] tracking-tight text-ink sm:text-5xl">
+            <TextReveal>{"Farming hasn't changed in twenty years. The stakes have."}</TextReveal>
           </h2>
         </Reveal>
 
@@ -26,9 +35,8 @@ export function Problem() {
         </Stagger>
 
         <Reveal delay={0.05}>
-          <h2 className="mt-20 max-w-3xl text-balance text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            <span className="text-ink">And everyone</span>{" "}
-            <span className="text-accent">pays.</span>
+          <h2 className="mt-20 max-w-3xl text-3xl font-semibold leading-[1.12] tracking-tight text-ink sm:text-5xl">
+            <TextReveal>{"And everyone pays."}</TextReveal>
           </h2>
         </Reveal>
         <Stagger className="mt-6 grid gap-5 md:grid-cols-2" stagger={0.1}>

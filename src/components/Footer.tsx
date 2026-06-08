@@ -1,14 +1,14 @@
-import { AtSign, Globe, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { TerraMark } from "./TerraMark";
+import { LinkedinIcon, XIcon } from "./icons";
 import { founders } from "@/lib/site";
 
 const columns = [
   {
     heading: "Product",
     links: [
-      { label: "Products", href: "#products" },
-      { label: "The Brain", href: "#products" },
-      { label: "The Eyes", href: "#products" },
+      { label: "The Eyes", href: "#camera" },
+      { label: "Case Study", href: "#casestudy" },
     ],
   },
   {
@@ -28,9 +28,14 @@ const columns = [
 ];
 
 const socials = [
-  { label: "Email", icon: Mail, href: `mailto:${founders[0].email}` },
-  { label: "Social", icon: AtSign, href: "#" },
-  { label: "Website", icon: Globe, href: "#" },
+  { label: "Email", icon: Mail, href: "mailto:kamisalahuddin@gmail.com", external: false },
+  { label: "X", icon: XIcon, href: "https://x.com/TerraRoboticsHQ", external: true },
+  {
+    label: "LinkedIn",
+    icon: LinkedinIcon,
+    href: "https://www.linkedin.com/company/try-terra-ai/",
+    external: true,
+  },
 ];
 
 export function Footer() {
@@ -69,12 +74,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-5 border-t border-line pt-6">
-          <span className="glass inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-ink-soft">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
-            All systems operational
-          </span>
-
+        <div className="mt-14 border-t border-line pt-6">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="text-xs text-ink-mute">
               © {new Date().getFullYear()} Terra. All rights reserved. The operating system
@@ -86,6 +86,8 @@ export function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
+                  target={s.external ? "_blank" : undefined}
+                  rel={s.external ? "noreferrer" : undefined}
                   className="press text-ink-mute transition-colors hover:text-ink"
                 >
                   <s.icon size={18} />
