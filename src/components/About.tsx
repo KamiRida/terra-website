@@ -49,24 +49,6 @@ export function About() {
             <Face {...j} className="w-full" />
           </div>
         </div>
-
-        {/* the founders, on camera */}
-        <Reveal delay={0.05} className="mx-auto mt-14 max-w-3xl sm:mt-16">
-          <div className="glass relative overflow-hidden rounded-[2rem] p-2">
-            <video
-              src="/founder-intro.mp4"
-              poster="/founder-intro-poster.jpg"
-              controls
-              playsInline
-              preload="metadata"
-              className="aspect-video w-full rounded-[1.55rem] bg-black object-cover"
-            />
-          </div>
-          <p className="mt-4 text-center text-sm text-ink-mute">
-            Meet the founders. One minute on what Terra is and why we build it
-            in Fresno.
-          </p>
-        </Reveal>
       </div>
     </section>
   );
